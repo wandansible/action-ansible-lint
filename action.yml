@@ -1,0 +1,6 @@
+---
+name: Lint Ansible
+description: Lint ansible and only display annotations for new or edited files
+runs:
+  using: docker
+  image: Dockerfile
