@@ -18,19 +18,37 @@ if [ -n "${ANSIBLE_LINT_ARGS}" ]; then
     lint_cmd="${lint_cmd} ${ANSIBLE_LINT_ARGS}"
 fi
 
-echo "Lint command: ${lint_cmd}"
-echo ""
-
 if ! lint_cmd_check="$(${lint_cmd} --version 2>&1)"; then
+    echo "Invalid arguments provided for lint command: ${lint_cmd}"
+    echo "Command output:"
+    echo "------"
     echo "${lint_cmd_check}"
+    echo "------"
     echo ""
     echo "Invalid ansible-lint arguments provided, exiting" >&2
     exit 3
 fi
 
 if [ "${VALIDATE_ALL_CODEBASE}" = "true" ]; then
-    ${lint_cmd} || exit $? && exit 0
+    echo "Linting entire code base"
+    echo ""
+    echo "Running lint command: ${lint_cmd}"
+    echo "Command output:"
+    echo "------"
+
+    lint_status=0
+    ${lint_cmd} || lint_status=$?
+
+    echo "------"
+    if [ "${lint_status}" -ne 0 ]; then
+        echo ""
+        echo "Exiting with ansible linting errors"
+    fi
+
+    exit "${lint_status}"
 fi
+
+echo "Linting new or changed files"
 
 if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
     GITHUB_SHA="$(jq -r .pull_request.head.sha < "${GITHUB_EVENT_PATH}")"
@@ -49,12 +67,12 @@ else
     all_files="$(git diff --name-only --diff-filter=d "${DEFAULT_BRANCH}...${GITHUB_SHA}")"
 fi
 
-echo "New or edited files:"
-
+echo ""
+echo "Generated file list:"
 check_files=""
 for file in ${all_files}; do
     if [ -f "${file}" ]; then
-        echo "${file}"
+        echo "  * ${file}"
         check_files="${check_files} ${file}"
     fi
 done
@@ -65,6 +83,9 @@ if [ -z "${check_files}" ]; then
 fi
 
 echo ""
+echo "Running lint command: ${lint_cmd}"
+echo "Command output:"
+echo "------"
 
 lint_errors=0
 lint_warnings=0
@@ -91,6 +112,7 @@ while read -r line; do
     fi
 done <<< "$(${lint_cmd})"
 
+echo "------"
 echo ""
 echo "Total errors: ${lint_errors}"
 echo "Total warnings: ${lint_warnings}"
