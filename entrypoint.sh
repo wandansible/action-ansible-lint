@@ -84,7 +84,7 @@ fi
 
 echo ""
 echo "Running lint command: ${lint_cmd}"
-echo "Command output:"
+echo "Command output (excluding actions annotations for unchanged files):"
 echo "------"
 
 lint_errors=0
