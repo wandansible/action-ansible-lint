@@ -110,7 +110,7 @@ while read -r line; do
     else
         echo "${line}"
     fi
-done <<< "$(${lint_cmd})"
+done < <(${lint_cmd})
 
 echo "------"
 echo ""
