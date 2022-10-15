@@ -34,14 +34,14 @@ jobs:
         with:
           fetch-depth: 0
       - name: Lint ansible
-        uses: wanduow/action-ansible-lint@v1
+        uses: wandansible/action-ansible-lint@v1
 ```
 
 With ansible-lint arguments:
 
 ```yaml
       - name: Lint ansible
-        uses: wanduow/action-ansible-lint@v1
+        uses: wandansible/action-ansible-lint@v1
         env:
           ANSIBLE_LINT_ARGS: "-vv ansible-dir/"
 ```
