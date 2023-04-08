@@ -54,6 +54,7 @@ if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
     GITHUB_SHA="$(jq -r .pull_request.head.sha < "${GITHUB_EVENT_PATH}")"
 fi
 
+git config --global --add safe.directory "${GITHUB_WORKSPACE}"
 git checkout --quiet "${DEFAULT_BRANCH}"
 git checkout --quiet "${GITHUB_SHA}"
 
