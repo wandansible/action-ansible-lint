@@ -13,7 +13,7 @@ VALIDATE_ALL_CODEBASE="${VALIDATE_ALL_CODEBASE:-$default_validate_all_codebase}"
 DEFAULT_BRANCH="${DEFAULT_BRANCH:-$default_branch}"
 
 if [ -f "requirements.txt" ]; then
-    pip3 install requirements.txt
+    pip3 install -r requirements.txt
 fi
 
 lint_cmd="ansible-lint"
