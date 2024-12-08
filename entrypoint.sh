@@ -12,6 +12,10 @@ ANSIBLE_LINT_ARGS="${ANSIBLE_LINT_ARGS:-$default_ansible_lint_args}"
 VALIDATE_ALL_CODEBASE="${VALIDATE_ALL_CODEBASE:-$default_validate_all_codebase}"
 DEFAULT_BRANCH="${DEFAULT_BRANCH:-$default_branch}"
 
+if [ -f "requirements.txt" ]; then
+    pip3 install requirements.txt
+fi
+
 lint_cmd="ansible-lint"
 
 if [ -n "${ANSIBLE_LINT_ARGS}" ]; then
