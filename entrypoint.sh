@@ -55,7 +55,7 @@ fi
 echo "Linting new or changed files"
 
 if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
-    GITHUB_SHA="$(jq -r .pull_request.head.sha < "${GITHUB_EVENT_PATH}")"
+    GITHUB_SHA="$(jq -r .pull_request.head.sha <"${GITHUB_EVENT_PATH}")"
 fi
 
 git config --global --add safe.directory "${GITHUB_WORKSPACE}"
@@ -95,9 +95,7 @@ echo "------"
 lint_errors=0
 lint_warnings=0
 while read -r line; do
-    line="$(echo "${line}" | xargs)"
-
-    if echo "${line}" | grep -E "^::(error|warning) .*file=([^,]+).+::" > /dev/null; then
+    if echo "${line}" | grep -E "^::(error|warning) .*file=([^,]+).+::" >/dev/null; then
         annotation_severity="$(echo "${line#::*}" | cut -d ' ' -f 1)"
         annotation_file="$(echo "${line}" | grep -oE "file=([^,]+)" | head -n 1 | cut -d '=' -f 2-)"
 
